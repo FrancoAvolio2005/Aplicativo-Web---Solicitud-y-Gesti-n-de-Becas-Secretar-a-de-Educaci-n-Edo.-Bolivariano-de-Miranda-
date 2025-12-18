@@ -1,0 +1,161 @@
+<!-- Archivo que sirve de plantilla (template) base para mantener una estructura consiste en los archivos 
+correspondiente del usuario solicitante de la aplicación.  -->
+
+
+<!-- Las etiquetas {% load static %} y {% static '...' %} son de Django y se usan para cargar correctamente los
+archivos CSS, JavaScript e imágenes. -->
+
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="jpg" href="../static/img/logoEmpresa2.png">
+    <title>Secretaría de Educación Edo. Miranda</title>
+
+<!-- Se enlazan hojas de estilo como home.css, bootstrap.min.css, y styles.css. -->
+
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+<!-- Se importa el script para usar iconos (como el de cerrar sesión y las redes sociales). -->
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+</head>
+
+<!-- Las clases como d-flex, vh-100, bg-light, navbar, container-fluid, etc., indican que el diseño es responsivo y utiliza el
+sistema de cuadrícula y utilidades de Bootstrap. -->
+
+<body class="d-flex flex-column vh-100 bg-light">
+    <nav class="navbar navbar-expand-lg bg-danger"> <!-- se puede poner: <nav class="navbar navbar-expand-lg bg-primary" para azul; bg-warning, para amarillo;
+       bg-white, para blanco; bg-transparent, para transparente> -->
+
+        <div class="container-fluid"> <!-- se puede poner: <div class="container-fluid">, para más separación -->
+        <a class="navbar-brand text-white" href="/">
+          <img src="{% static 'img/logoEmpresa2.png' %}" alt="Logo" height="35" class="d-inline-block align-text-top me-2">
+          Secretaría de Educación Estado Miranda</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="nav-link text-white" href="/becas">Becas</a>
+              </li>
+
+              <!-- Si el usuario está autenticado: Aparecen los enlaces a "Solicitudes", "Crear Solicitud",
+              y el icono de "Cerrar Sesión" (Logout). En caso de no estar autenticado: Aparecen los enlaces para "Registrarse" y "Iniciar sesión".-->
+              
+              {% if user.is_authenticated %}
+                <li class="nav-item">
+                  <a class="nav-link text-white" href="/tasks">Solicitudes</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-white" href="/tasks/create">Crear Solicitud</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-white d-flex align-items-center" href="/logout">
+                      <ion-icon name="log-out-outline" class="me-1" style="font-size: 1.3rem;"></ion-icon>
+                  </a>
+              </li>
+              {% else %}
+                <li class="nav-item"><a class="nav-link text-white" href="/signup" >Registrarse</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="/iniciar_sesion">Iniciar sesión</a></li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <!-- El "block content" es un bloque de plantilla. Las plantillas secundarias que extiendan esta base insertarán su contenido único
+      (como la página de inicio, el formulario de registro, etc.) dentro de este bloque. -->
+
+      <div class="container-fluid flex-grow-1 p-0">
+        <section id="cursos">
+            {% block content %}
+            {% endblock %}
+        </section>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-xl-6 tm-contact-col-r p-4 rounded shadow-sm bg-light">
+        <h2 class="mb-4 text-center">Información de Contacto</h2>
+        <hr>
+        <div class="mapouter mb-4 rounded overflow-hidden shadow-sm">
+          <div class="gmap_canvas">
+            <iframe
+              width="100%" height="450" id="gmap_canvas" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15699.744591978597!2d-67.0264109!3d10.3469908!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8c2a8d0a18661755%3A0x88dac2f2b6703ba0!2sSECRETAR%C3%8DA%20DE%20EDUCACI%C3%93N!5e0!3m2!1ses-419!2sve!4v1731910720137!5m2!1ses-419!2sve" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+          </div>
+        </div>
+        <hr>
+        <address class="mb-4">
+          <strong>Ubicación:</strong> <br>
+          Carretera Panamericana, Km 24, <br>
+          Parcelamiento Industrial Club Hípico, parcela 16, <br>
+          sector Los Cerritos. Los Teques, estado Miranda.
+        </address>
+    
+        <ul class="tm-contact-links mb-4 list-unstyled">
+          <li class="mb-3">
+            <a href="tel:02123239274" class="text-decoration-none text-primary">
+              <i class="fas fa-phone me-2 text-secondary"></i>
+              <strong>Teléfono:</strong> 0212-323-92-74
+            </a>
+          </li>
+          <li>
+            <a href="mailto:pac.beca@gmail.com" class="text-decoration-none text-primary">
+              <i class="fas fa-envelope me-2 text-secondary"></i>
+              <strong>Correo Electrónico:</strong> pae.beca@gmail.com
+            </a>
+          </li>
+        </ul>
+    
+        <hr>
+        <div class="mt-5">
+          <strong>Redes Sociales</strong>
+          <br>
+          <ul class="tm-contact-social list-unstyled d-flex justify-content-start">
+            <li class="me-3">
+              <a href="https://www.facebook.com/MirandaGobierno?mibextid=ZbWKwL" class="tm-social-link text-dark">
+                <i class="fab fa-facebook fa-lg"><ion-icon name="logo-facebook"></ion-icon></i>
+              </a>
+            </li>
+            <li class="me-3">
+              <a href="https://www.instagram.com/mirandagob?igsh=NmVuNTQ0N253YXJ2" class="tm-social-link text-dark">
+                <i class="fab fa-instagram fa-lg"><ion-icon name="logo-instagram"></ion-icon></i>
+              </a>
+            </li>
+            <li>
+              <a href="http://www.miranda.gob.ve/" class="tm-social-link text-dark">
+                <i class="fab fa-web fa-lg"><ion-icon name="globe-outline"></ion-icon></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <hr>
+        <div class="mt-5">
+          <strong>Manual de Usuario (Solicitante): </strong>
+          <a href="{% static 'manuales/Becas Manual de Usuario .pdf' %}">Revisar manual </a>
+          <br>
+      </div>
+    </div>
+
+    <!-- Un pie de página de color oscuro (bg-dark) que contiene el aviso de Copyright 2025, con atribución al desarrollador de la aplicación
+    "Franco Avolio" -->
+    
+    <footer class="bg-dark text-white text-center py-3 ">
+        <p>&copy; 2025 Solicitud y Gestión de Becas. Todos los derechos reservados a Franco Avolio y Deiver Cedeño.</p>
+    </footer>   
+
+    <script src="{% static 'scripts/bootstrap.bundle.min.js' %}"></script>
+
+</body>
+
+<!-- Al final del <body>, se incluye el script bootstrap.bundle.min.js, necesario para que funcionen las funcionalidades de Bootstrap 
+(como el menú desplegable de la barra de navegación). -->
+
+</html>

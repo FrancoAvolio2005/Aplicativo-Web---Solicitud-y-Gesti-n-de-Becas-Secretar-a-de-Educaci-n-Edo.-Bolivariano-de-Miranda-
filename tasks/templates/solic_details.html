@@ -1,0 +1,292 @@
+{% extends 'admin_dashboard.html' %}
+{% load static %}
+{% block content %}
+
+<main class="container py-4">
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
+            <h2 class="display-6 text-center mb-4">Detalles de la Solicitud <strong>#{{ solicitud.id_solicitud }} </strong></h2>
+            <hr class="mb-5">
+
+            <div class="card shadow-lg p-4 mb-5 border-0 rounded-4">
+                <div class="card-body">
+
+                    <div class="mb-5">
+                        <h4 class="mb-3 border-bottom pb-2">Datos de la Solicitud</h4>
+                        <div class="row row-cols-1 row-cols-md-2 g-3 mb-4">
+                            <div class="col">
+                                <strong>Nombre del Usuario Solicitante:</strong> {{ solicitud.user.get_full_name|default:solicitud.user.username }}
+                            </div>
+                            <div class="col">
+                                <strong>Correo Electrónico:</strong> {{ solicitud.user.email }}
+                            </div>
+                            <div class="col">
+                                <strong>Beca Solicitada:</strong> {{ solicitud.beca.nombre|default:"No especificada" }}
+                            </div>
+                            <div class="col">
+                                <strong>Estatus de la Beca:</strong>
+                                {% if solicitud.estatus_beca.nombre == 'Aprobada' %}
+                                    <span class="badge bg-primary fs-6">{{ solicitud.estatus_beca.nombre|default:"Desconocido" }}</span>
+                                {% elif solicitud.estatus_beca.nombre == 'Rechazada' %}
+                                    <span class="badge bg-danger text-white fs-6">{{ solicitud.estatus_beca.nombre|default:"Desconocido" }}</span>
+                                {% else %}
+                                    <span class="badge bg-success text-white fs-6">{{ solicitud.estatus_beca.nombre|default:"Desconocido" }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="col-12">
+                                <strong>Fecha de Solicitud:</strong> {{ solicitud.fecha_creacion|date:"d M Y H:i" }}
+                            </div>
+                            
+                            {% if solicitud.estatus_beca.nombre == 'Rechazada' and solicitud.motivo_rechazo %}
+                            <div class="col-12">
+                                <p class="alert alert-danger mt-3 mb-0 p-2 border-2 border-start border-dark" style="border-left-width: 5px !important;">
+                                    <strong>Motivo de Rechazo:</strong> {{ solicitud.motivo_rechazo }}
+                                </p>
+                            </div>
+                            {% endif %}
+                            
+                        </div>
+                    </div>
+
+                    <hr class="my-5">
+
+                    <div class="mb-5">
+                        <h4 class="mb-3 border-bottom pb-2">Datos del Estudiante</h4>
+                        <div class="row row-cols-1 row-cols-md-2 g-3 mb-4">
+                            <div class="col">
+                                <strong>Nombre Completo:</strong> {{ solicitud.nombre_becario|default:"N/A" }} {{ solicitud.apellido_becario|default:"" }}
+                            </div>
+                            <div class="col">
+                                <strong>Cédula:</strong> {{ solicitud.cedula_becario|default:"N/A" }}
+                            </div>
+                            <div class="col">
+                                <strong>Edad:</strong> {{ solicitud.edad_becario|default:"N/A" }}
+                            </div>
+                            <div class="col">
+                                <strong>Fecha de Nacimiento:</strong> {{ solicitud.fecha_nacimiento_becario|default:"N/A" }}
+                            </div>
+                            <div class="col">
+                                <strong>Nacionalidad:</strong> {{ solicitud.nacionalidad_becario|default:"N/A" }}
+                            </div>
+                            <div class="col-12">
+                                <strong>Dirección Residencial:</strong> {{ solicitud.direccion_residencial_becario|default:"N/A" }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-5">
+
+                    <div class="mb-5">
+                        <h4 class="mb-3 border-bottom pb-2">Ubicación y Plantel</h4>
+                        <div class="row row-cols-1 row-cols-md-3 g-3 mb-4">
+                            <div class="col">
+                                <strong>Estado:</strong> {{ solicitud.estado.nombre|default:"N/A" }}
+                            </div>
+                            <div class="col">
+                                <strong>Municipio:</strong> {{ solicitud.municipio.nombre|default:"N/A" }}
+                            </div>
+                            <div class="col">
+                                <strong>Parroquia:</strong> {{ solicitud.parroquia.nombre|default:"N/A" }}
+                            </div>
+                            <div class="col-12">
+                                <strong>Institución Educativa:</strong> {{ solicitud.plantel.nombre_plantel|default:"N/A" }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-5">
+
+                    <div class="mb-5">
+                        <h4 class="mb-3 border-bottom pb-2">Información Bancaria</h4>
+                        <div class="row row-cols-1 row-cols-md-2 g-3 mb-4">
+                            <div class="col">
+                                <strong>Banco:</strong> {{ solicitud.banco.nombre|default:"No especificado" }}
+                            </div>
+                            <div class="col">
+                                <strong>Número de Cuenta:</strong> {{ solicitud.numero_de_cuenta|default:"No proporcionado" }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-5">
+
+                    <div class="mb-5">
+                        <h4 class="mb-3 border-bottom pb-2">Documentos Adjuntos</h4>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">Tipo de Documento</th>
+                                        <th scope="col" class="text-center">Estado</th>
+                                        <th scope="col" class="text-center">Visualizar</th>
+                                        <th scope="col" class="text-center">Miniatura</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Constancia de Estudios</td>
+                                        <td class="text-center">
+                                            {% if solicitud.constancia_estudios %}<span class="badge bg-success">Adjunto</span>{% else %}<span class="badge bg-danger">Falta</span>{% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if solicitud.constancia_estudios %}
+                                                <a href="{{ solicitud.constancia_estudios.url }}" target="_blank" class="btn btn-outline-primary btn-sm">Ver</a>
+                                            {% else %}
+                                                N/A
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if solicitud.constancia_estudios %}
+                                                <img src="{{ solicitud.constancia_estudios.url }}" alt="Constancia" class="img-fluid rounded" style="max-height: 80px; object-fit: contain;">
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Constancia de Número de Cuenta Bancaria</td>
+                                        <td class="text-center">
+                                            {% if solicitud.constancia_numero_cuenta %}<span class="badge bg-success">Adjunto</span>{% else %}<span class="badge bg-danger">Falta</span>{% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if solicitud.constancia_numero_cuenta %}
+                                                <a href="{{ solicitud.constancia_numero_cuenta.url }}" target="_blank" class="btn btn-outline-primary btn-sm">Ver</a>
+                                            {% else %}
+                                                N/A
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if solicitud.constancia_numero_cuenta %}
+                                                <img src="{{ solicitud.constancia_numero_cuenta.url }}" alt="Constancia" class="img-fluid rounded" style="max-height: 80px; object-fit: contain;">
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Boletín</td>
+                                        <td class="text-center">
+                                            {% if solicitud.boletin %}<span class="badge bg-success">Adjunto</span>{% else %}<span class="badge bg-danger">Falta</span>{% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if solicitud.boletin %}
+                                                <a href="{{ solicitud.boletin.url }}" target="_blank" class="btn btn-outline-primary btn-sm">Ver</a>
+                                            {% else %}
+                                                N/A
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if solicitud.boletin %}
+                                                <img src="{{ solicitud.boletin.url }}" alt="Boletín" class="img-fluid rounded" style="max-height: 80px; object-fit: contain;">
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cédula de Identidad</td>
+                                        <td class="text-center">
+                                            {% if solicitud.cedula %}<span class="badge bg-success">Adjunto</span>{% else %}<span class="badge bg-danger">Falta</span>{% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if solicitud.cedula %}
+                                                <a href="{{ solicitud.cedula.url }}" target="_blank" class="btn btn-outline-primary btn-sm">Ver</a>
+                                            {% else %}
+                                                N/A
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if solicitud.cedula %}
+                                                <img src="{{ solicitud.cedula.url }}" alt="Cédula" class="img-fluid rounded" style="max-height: 80px; object-fit: contain;">
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-4 mb-5">
+                {% if not user.is_superuser %}
+                    <a href="javascript:history.back()" class="btn btn-danger btn-lg">
+                        <ion-icon name="arrow-back-outline" class="ms-2 align-middle" style="font-size: 1.3rem;"></ion-icon> Volver atrás
+                    </a>
+                {% elif solicitud.estatus_beca.nombre == 'En proceso' %}
+                    <a href="{% url 'solic_pendiente' %}" class="btn btn-danger btn-lg">
+                        <i class="bi bi-arrow-left me-2"></i><ion-icon name="arrow-back-outline" class="ms-2 align-middle" style="font-size: 1.3rem;"></ion-icon> Volver a Solicitudes Pendientes
+                    </a>
+                {% elif solicitud.estatus_beca.nombre == 'Aprobada' %}
+                    <a href="{% url 'solic_aprobadas' %}" class="btn btn-danger btn-lg">
+                        <i class="bi bi-arrow-left me-2"></i><ion-icon name="arrow-back-outline" class="ms-2 align-middle" style="font-size: 1.3rem;"></ion-icon> Volver a Solicitudes Aprobadas
+                    </a>
+                {% elif solicitud.estatus_beca.nombre == 'Asignada' %}
+                    <a href="{% url 'asig_beca' %}" class="btn btn-danger btn-lg">
+                        <i class="bi bi-arrow-left me-2"></i><ion-icon name="arrow-back-outline" class="ms-2 align-middle" style="font-size: 1.3rem;"></ion-icon> Volver atrás
+                    </a>
+                {% else %}
+                    <a href="{% url 'solic_rechazadas' %}" class="btn btn-danger btn-lg">
+                        <i class="bi bi-arrow-left me-2"></i><ion-icon name="arrow-back-outline" class="ms-2 align-middle" style="font-size: 1.3rem;"></ion-icon> Volver a Solicitudes Rechazadas
+                    </a>
+                {% endif %}
+
+                {% if solicitud.estatus_beca.nombre == 'En proceso' %}
+                    <div>
+                        <button type="button" class="btn btn-danger btn-lg me-2" data-bs-toggle="modal" data-bs-target="#rechazoModal">
+                            Rechazar <ion-icon name="close-outline" class="ms-2 align-middle" style="font-size: 1.3rem;"></ion-icon>
+                        </button>
+                        
+                        <a href="{% url 'gestionar_solicitud' solicitud_id=solicitud.id_solicitud accion='aprobar' %}" class="btn btn-warning btn-lg" onclick="return confirm('¿Estás seguro de que quieres APROBAR esta solicitud?');">
+                            Aprobar <ion-icon name="checkmark-outline" class="ms-2 align-middle" style="font-size: 1.3rem;"></ion-icon>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="modal fade" id="rechazoModal" tabindex="-1" aria-labelledby="rechazoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="rechazoModalLabel">Confirmar Rechazo de Solicitud #{{ solicitud.id_solicitud }}</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'gestionar_solicitud' solicitud_id=solicitud.id_solicitud accion='rechazar' %}" method="post">
+                {% csrf_token %} <div class="modal-body">
+                    <p>Por favor, selecciona el <strong>motivo principal</strong> del rechazo:</p>
+
+                    <div class="mb-3">
+                        <label for="motivo_select" class="form-label">Motivo de Rechazo (Selección):</label>
+                        <select class="form-select" id="motivo_select" name="motivo_select" required>
+                            <option value="">Selecciona un motivo...</option>
+                            <option value="Documentación incompleta o ilegible">Documentación incompleta o ilegible</option>
+                            <option value="Incumplimiento de requisitos de edad/nacionalidad">Incumplimiento de requisitos de edad/nacionalidad</option>
+                            <option value="Datos académicos insuficientes">Datos académicos insuficientes</option>
+                            <option value="Faltan documentos obligatorios">Faltan documentos obligatorios (Cédula/Boletín/Constancias)</option>
+                            <option value="Datos bancarios incorrectos o incompletos">Datos bancarios incorrectos o incompletos</option>
+                            <option value="El usuario no cumple con el perfil socioeconómico">El usuario no cumple con el perfil socioeconómico</option>
+                            <option value="Otro motivo">Otro motivo (revisa la caja de texto inferior)</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="motivo_texto" class="form-label">Detalles específicos del rechazo (Opcional):</label>
+                        <textarea class="form-control" id="motivo_texto" name="motivo_texto" rows="3" placeholder="Ej: Faltó la copia de la Cédula y el boletín no tiene sello."></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Confirmar Rechazo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

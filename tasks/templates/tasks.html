@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<main class="container">
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
+            <br>
+            <h1 class="mb-4 text-center">Tus Solicitudes</h1>
+            <hr>
+
+            {% if not user.solicitudes.all %}
+            <div class="alert alert-info text-center" role="alert">
+                <h4 class="alert-heading">No se han encontrado solicitudes</h4>
+                <p>Parece que aún no has creado ninguna solicitud de beca.</p>
+                <hr>
+                <p class="mb-0">¡Explora nuestras becas y aplica hoy mismo!</p>
+                <a href="{% url 'becas' %}" class="btn btn-warning mt-3">Ver Becas Disponibles</a>
+            </div>
+            {% else %}
+                <p class="lead text-center mb-4">Aquí están tus solicitudes de beca actuales</p>
+                
+                <div class="row">
+                    {% for application in user.solicitudes.all %}
+
+                    <div class="col-lg-6 col-md-6 mb-4">
+                            <div class="card bg-white shadow h-100">
+                                <div class="card-header bg-transparent text-dark">
+                                    <h5 class="mb-0">Solicitud para la Beca: {{ application.beca.nombre|default:"Beca Desconocida" }}</h5>
+                                </div>
+                                <div class="card-body d-flex flex-column">
+                                    
+                                    <p class="card-text">Estado Actual de la solicitud:
+                                        <span class="badge bg-warning text-dark fs-6">{{ application.estatus_beca.nombre|default:"Estado Desconocido" }}</span>
+                                    </p>
+                                    
+                                    <p class="card-text">Fecha de Creación:
+                                        {{ application.fecha_creacion|default:"Estado Desconocido" }}</span>
+                                    </p>
+                                    
+                                    <div class="mt-auto d-flex justify-content-end">
+                                        <a href="{% url 'solic_details_user' application.id_solicitud %}" class="btn btn-warning">Ver Solicitud</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+        </div>
+    </div>
+</main>
+
+<hr>
+
+<div class="row">
+    <div class="col-md-8 offset-md-2 mt-3 mb-5">
+        <h2 class="text-center text-danger mb-3">
+            <ion-icon name="arrow-down-outline"></ion-icon> Importante <ion-icon name="arrow-down-outline"></ion-icon>
+        </h2>
+        
+        <div class="card card-body p-4 shadow-lg">
+            <h4 class="text-center mb-3">Etapas o estados de tu solicitud</h4>
+            <ul class="list-unstyled">
+                <li class="mb-2">
+                    <p class="card-text">
+                        <span class="badge bg-warning text-dark fs-6">En proceso</span> Su solicitud ha sido recibida y se encuentra en revisión.
+                    </p>
+                </li>
+                <li class="mb-2">
+                    <p class="card-text">
+                        <span class="badge bg-primary text-white fs-6">Aprobada</span> Su solicitud ha sido aprobada, espere el estado de "Asignada" para finalizar el proceso de la solicitud.
+                    </p>
+                </li>
+                <li class="mb-2">
+                    <p class="card-text">
+                        <span class="badge bg-danger text-white fs-6">Rechazada</span> Su solicitud no ha sido aceptada en esta ocasión.
+                    </p>
+                </li>
+                <li class="mb-2">
+                    <p class="card-text">
+                        <span class="badge bg-success text-white fs-6">Asignada</span> Su beca ha sido asignada. Por favor, dirigirse al (CDCE) más cercana a su domicilio para formalizar su solicitud.
+                    </p>
+                </li>
+            </ul>
+        </div>
+        <br>
+
+        <div class="card card-body p-4 shadow-lg">
+            <p class="lead text-center mb-0" style="display: inline;">Recuerde optar por renovación de beca cada que comience un período académico.</p>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+{% endblock content %}

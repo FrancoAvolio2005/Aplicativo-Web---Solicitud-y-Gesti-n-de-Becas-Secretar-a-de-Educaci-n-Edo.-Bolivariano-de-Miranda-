@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+{% block content %}
+<main class="container">
+    <div class="row">
+        <div class="col-md-10 offset-md-1 mt-5">
+
+            <div class="modal fade" id="loadingModal" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-body text-center p-5">
+                            <div class="spinner-border text-warning" role="status" style="width: 3rem; height: 3rem;">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
+                            <h5 class="mt-3">Procesando Solicitud...</h5>
+                            <p class="text-muted">Por favor, espera. Esto puede tardar unos segundos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form action="/tasks/create" method="POST" enctype="multipart/form-data" class="card card-body p-4 shadow-lg mb-5" id="solicitudForm">
+                <div class="text-center mb-3">
+                    <img src="../static/img/gobernacion.png" height="150px" width="160px" alt="Gobernación Logo">
+                </div>
+                <hr>
+                <h1 class="text-center mb-4">Crear Solicitud</h1>
+
+                {% if error %}
+                    <div class="alert alert-danger text-center" role="alert">
+                        {{ error }}
+                    </div>
+                {% endif %}
+
+                {% csrf_token %}
+
+                <div class="card card-body mb-4">
+                    <h4 class="mb-3">Datos del Estudiante</h4>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.nombre_becario.id_for_label }}" class="form-label">{{ form.nombre_becario.label }}</label>
+                            {{ form.nombre_becario }}
+                            {% if form.nombre_becario.errors %}<div class="invalid-feedback d-block">{{ form.nombre_becario.errors }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.apellido_becario.id_for_label }}" class="form-label">{{ form.apellido_becario.label }}</label>
+                            {{ form.apellido_becario }}
+                            {% if form.apellido_becario.errors %}<div class="invalid-feedback d-block">{{ form.apellido_becario.errors }}</div>{% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.cedula_becario.id_for_label }}" class="form-label">{{ form.cedula_becario.label }}</label>
+                            {{ form.cedula_becario }}
+                            {% if form.cedula_becario.errors %}<div class="invalid-feedback d-block">{{ form.cedula_becario.errors }}</div>{% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.fecha_nacimiento_becario.id_for_label }}" class="form-label">{{ form.fecha_nacimiento_becario.label }}</label>
+                            {{ form.fecha_nacimiento_becario }}
+                            {% if form.fecha_nacimiento_becario.errors %}<div class="invalid-feedback d-block">{{ form.fecha_nacimiento_becario.errors }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.nacionalidad_becario.id_for_label }}" class="form-label">{{ form.nacionalidad_becario.label }}</label>
+                            {{ form.nacionalidad_becario }}
+                            {% if form.nacionalidad_becario.errors %}<div class="invalid-feedback d-block">{{ form.nacionalidad_becario.errors }}</div>{% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="{{ form.direccion_residencial_becario.id_for_label }}" class="form-label">{{ form.direccion_residencial_becario.label }}</label>
+                            {{ form.direccion_residencial_becario }}
+                            {% if form.direccion_residencial_becario.errors %}<div class="invalid-feedback d-block">{{ form.direccion_residencial_becario.errors }}</div>{% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-body mb-4">
+                    <h4 class="mb-3">Datos de la Solicitud</h4>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="{{ form.estado.id_for_label }}" class="form-label">{{ form.estado.label }}</label>
+                            {{ form.estado }}
+                            {% if form.estado.errors %}<div class="invalid-feedback d-block">{{ form.estado.errors }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-4">
+                            <label for="{{ form.municipio.id_for_label }}" class="form-label">{{ form.municipio.label }}</label>
+                            {{ form.municipio }}
+                            {% if form.municipio.errors %}<div class="invalid-feedback d-block">{{ form.municipio.errors }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-4">
+                            <label for="{{ form.parroquia.id_for_label }}" class="form-label">{{ form.parroquia.label }}</label>
+                            {{ form.parroquia }}
+                            {% if form.parroquia.errors %}<div class="invalid-feedback d-block">{{ form.parroquia.errors }}</div>{% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.plantel.id_for_label }}" class="form-label">{{ form.plantel.label }}</label>
+                            {{ form.plantel }}
+                            {% if form.plantel.errors %}<div class="invalid-feedback d-block">{{ form.plantel.errors }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.beca.id_for_label }}" class="form-label">{{ form.beca.label }}</label>
+                            {{ form.beca }}
+                            {% if form.beca.errors %}<div class="invalid-feedback d-block">{{ form.beca.errors }}</div>{% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.banco.id_for_label }}" class="form-label">{{ form.banco.label }}</label>
+                            {{ form.banco }}
+                            {% if form.banco.errors %}<div class="invalid-feedback d-block">{{ form.banco.errors }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.numero_de_cuenta.id_for_label }}" class="form-label">{{ form.numero_de_cuenta.label }}</label>
+                            {{ form.numero_de_cuenta }}
+                            {% if form.numero_de_cuenta.errors %}<div class="invalid-feedback d-block">{{ form.numero_de_cuenta.errors }}</div>{% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-body mb-4">
+                    <h4 class="mb-3">Documentos Adjuntos</h4>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.constancia_estudios.id_for_label }}" class="form-label">{{ form.constancia_estudios.label }}</label>
+                            {{ form.constancia_estudios }}
+                            {% if form.constancia_estudios.errors %}<div class="invalid-feedback d-block">{{ form.constancia_estudios.errors }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.boletin.id_for_label }}" class="form-label">{{ form.boletin.label }}</label>
+                            {{ form.boletin }}
+                            {% if form.boletin.errors %}<div class="invalid-feedback d-block">{{ form.boletin.errors }}</div>{% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.cedula.id_for_label }}" class="form-label">{{ form.cedula.label }}</label>
+                            {{ form.cedula }}
+                            {% if form.cedula.errors %}<div class="invalid-feedback d-block">{{ form.cedula.errors }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.constancia_numero_cuenta.id_for_label }}" class="form-label">{{ form.constancia_numero_cuenta.label }}</label>
+                            {{ form.constancia_numero_cuenta }}
+                            {% if form.constancia_numero_cuenta.errors %}<div class="invalid-feedback d-block">{{ form.constancia_numero_cuenta.errors }}</div>{% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-6">
+                        <a href="{% url 'home' %}" class="btn btn-danger w-100 d-flex align-items-center justify-content-center">
+                            Cancelar solicitud
+                            <ion-icon name="close-outline" class="ms-2" style="font-size: 1.3rem;"></ion-icon>
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" id="submitBtn" class="btn btn-warning w-100 d-flex align-items-center justify-content-center">
+                            Enviar solicitud
+                            <ion-icon name="checkmark-outline" class="ms-2" style="font-size: 1.3rem;"></ion-icon>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+<div class="row">
+
+    <div class="col-md-8 offset-md-2 mt-3 mb-5">
+        <h2 class="text-center text-danger mb-3">
+            <ion-icon name="arrow-down-outline"></ion-icon> Importante <ion-icon name="arrow-down-outline"></ion-icon>
+        </h2>
+        <div class="card card-body p-4 shadow-lg">
+            <p class="lead text-center mb-0" style="display: inline;">Para los campos de "Seleccionar archivo" solo se admiten imágenes en formato (.jpg)</p>
+        </div>
+        <br>
+        <div class="card card-body p-4 shadow-lg">
+            <p class="lead text-center mb-0" style="display: inline;">Acuda al Centro de Desarrollo de Calidad Educativa (CDCE) más cercana a su domicilio para formalizar su solicitud.</p>
+        </div>
+    </div>
+</div>
+<hr>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('solicitudForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
+
+        submitBtn.addEventListener('click', function() {
+            // **Validación de Formularios (Importante):**
+            // Antes de enviar y mostrar el spinner, debes asegurar que el formulario es válido.
+
+            if (form.checkValidity()) {
+                // 1. Mostrar el modal de carga
+                loadingModal.show();
+
+                // 2. Desactivar el botón para evitar doble envío
+                submitBtn.disabled = true;
+
+                // 3. Enviar el formulario
+                // Después de un breve retraso (opcional, para que el usuario vea el spinner, o inmediatamente)
+                // Usaremos un pequeño retraso solo para fines demostrativos, pero lo ideal es enviarlo inmediatamente.
+                // Si la validación en el servidor falla, la vista de Django re-renderizará la plantilla
+                // con los errores, y el modal no se mostrará en la recarga (ya que el JS se ejecuta de nuevo).
+                setTimeout(() => {
+                     form.submit();
+                }, 100); // 100 ms de retraso
+
+            } else {
+                // Si la validación falla (ej. campos requeridos vacíos),
+                // la clase 'was-validated' de Bootstrap ayuda a mostrar los mensajes de error.
+                form.classList.add('was-validated');
+
+                // Si hay errores, forzamos el foco en el primer campo inválido para guiar al usuario
+                const firstInvalidField = form.querySelector(':invalid');
+                if (firstInvalidField) {
+                    firstInvalidField.focus();
+                }
+            }
+        });
+    });
+</script>
+
+{% endblock %}

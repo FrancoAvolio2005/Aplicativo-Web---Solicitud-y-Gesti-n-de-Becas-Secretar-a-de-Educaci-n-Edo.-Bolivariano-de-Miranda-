@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card mt-5 shadow-lg mb-5">
+                <div class="card-body">
+
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} text-center" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if user_form.non_field_errors %}
+                        <div class="alert alert-danger text-center" role="alert">
+                            {% for error in user_form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    {% if profile_form.non_field_errors %}
+                        <div class="alert alert-danger text-center" role="alert">
+                            {% for error in profile_form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <form method="post" id="signupForm" class="needs-validation" novalidate>
+                        <div style="text-align: center;">
+                            <img src="../static/img/gobernacion.png" height="150px" width="160px">
+                        </div>
+                        <hr>
+                        <h1 class="text-center">Registrarse</h1>
+                        {% csrf_token %}
+
+                        <fieldset class="form-group border p-3 mb-3">
+
+                        <legend class="border-bottom pb-1">Datos de Acceso</legend>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ user_form.username.id_for_label }}" class="form-label">{{ user_form.username.label }}</label>
+                                    {{ user_form.username }}
+                                    {% if user_form.username.errors %}
+                                        <div class="text-danger small">{{ user_form.username.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ user_form.email.id_for_label }}" class="form-label">{{ user_form.email.label }}</label>
+                                    {{ user_form.email }}
+                                    {% if user_form.email.errors %}
+                                        <div class="text-danger small">{{ user_form.email.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ user_form.password.id_for_label }}" class="form-label">Contraseña</label>
+                                    <div class="input-group">
+                                        {{ user_form.password1 }}
+                                        <button type="button" class="input-group-text" id="togglePassword1">
+                                            <ion-icon name="eye-outline"></ion-icon>
+                                        </button>
+                                    </div>
+                                    {% if user_form.password1.errors %} 
+                                        <div class="text-danger small">{{ user_form.password1.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ user_form.password2.id_for_label }}" class="form-label">Confirmar Contraseña</label>
+                                    <div class="input-group">
+                                        {{ user_form.password2 }}
+                                        <button type="button" class="input-group-text" id="togglePassword2">
+                                            <ion-icon name="eye-outline"></ion-icon>
+                                        </button>
+                                    </div>
+                                    {% if user_form.password2.errors %}
+                                        <div class="text-danger small">{{ user_form.password2.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="form-group border p-3 mb-3">
+
+                        <legend class="border-bottom pb-1">Datos Personales</legend>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="{{ profile_form.nombre_completo.id_for_label }}" class="form-label">{{ profile_form.nombre_completo.label }}</label>
+                                    {{ profile_form.nombre_completo }}
+                                    {% if profile_form.nombre_completo.errors %}
+                                        <div class="text-danger small">{{ profile_form.nombre_completo.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="{{ profile_form.apellido_completo.id_for_label }}" class="form-label">{{ profile_form.apellido_completo.label }}</label>
+                                    {{ profile_form.apellido_completo }}
+                                    {% if profile_form.apellido_completo.errors %}
+                                        <div class="text-danger small">{{ profile_form.apellido_completo.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="{{ profile_form.genero.id_for_label }}" class="form-label">{{ profile_form.genero.label }}</label>
+                                    {{ profile_form.genero }}
+                                    {% if profile_form.genero.errors %}
+                                        <div class="text-danger small">{{ profile_form.genero.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="{{ profile_form.cedula_identidad.id_for_label }}" class="form-label">{{ profile_form.cedula_identidad.label }}</label>
+                                    {{ profile_form.cedula_identidad }}
+                                    {% if profile_form.cedula_identidad.errors %}
+                                        <div class="text-danger small">{{ profile_form.cedula_identidad.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="{{ profile_form.fecha_nacimiento.id_for_label }}" class="form-label">{{ profile_form.fecha_nacimiento.label }}</label>
+                                    {{ profile_form.fecha_nacimiento }}
+                                    {% if profile_form.fecha_nacimiento.errors %}
+                                        <div class="text-danger small">{{ profile_form.fecha_nacimiento.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="{{ profile_form.numero_telefono.id_for_label }}" class="form-label">{{ profile_form.numero_telefono.label }}</label>
+                                    {{ profile_form.numero_telefono }}
+                                    {% if profile_form.numero_telefono.errors %}
+                                        <div class="text-danger small">{{ profile_form.numero_telefono.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-warning" id="submitBtn">Registrarse</button>
+                        </div>
+                    </form>
+                    <small class="text-muted mt-3 d-block text-center">
+                        ¿Ya tienes una cuenta? <a href="{% url 'iniciar_sesion' %}">Inicia sesión aquí</a>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="loadingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <div class="spinner-border text-warning" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+                <p class="mt-2 mb-0">Procesando registro, por favor espere...</p>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // --- CÓDIGO DE MOSTRAR/OCULTAR CONTRASEÑA (EXISTENTE) ---
+        function setupPasswordToggle(inputId, toggleButtonId) {
+            const passwordInput = document.querySelector(`#${inputId}`);
+            const toggleButton = document.querySelector(`#${toggleButtonId}`);
+
+            if (passwordInput && toggleButton) {
+                toggleButton.addEventListener('click', function () {
+
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+
+                    const icon = this.querySelector('ion-icon');
+                    const iconName = icon.getAttribute('name') === 'eye-outline' ? 'eye-off-outline' : 'eye-outline';
+                    icon.setAttribute('name', iconName);
+                });
+            }
+        }
+
+        setupPasswordToggle('id_password1', 'togglePassword1');
+        setupPasswordToggle('id_password2', 'togglePassword2');
+        // --- FIN CÓDIGO MOSTRAR/OCULTAR CONTRASEÑA ---
+
+        // ----------------------------------------------------------------
+        // INICIO: CÓDIGO PARA EL MODAL DE CARGA EN EL REGISTRO (NUEVO)
+        // ----------------------------------------------------------------
+
+        const form = document.getElementById('signupForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const loadingModalElement = document.getElementById('loadingModal');
+        const loadingModal = new bootstrap.Modal(loadingModalElement);
+
+        if (form && submitBtn) {
+            form.addEventListener('submit', function (event) {
+                // 1. Previene el envío inmediato (para permitir la validación)
+                event.preventDefault(); 
+
+                // 2. Comprueba la validez del formulario (HTML5 required fields)
+                if (form.checkValidity()) {
+                    // Si el formulario es VÁLIDO:
+                    
+                    // a) Muestra el modal de carga
+                    loadingModal.show();
+                    
+                    // b) Deshabilita el botón para evitar envíos dobles
+                    submitBtn.disabled = true;
+
+                    // c) Envía el formulario al servidor después de un breve retraso
+                    setTimeout(() => {
+                         form.submit();
+                    }, 200); 
+                    
+                } else {
+                    // Si el formulario NO es VÁLIDO (faltan campos required):
+                    
+                    // a) Añade la clase de validación de Bootstrap para mostrar los errores
+                    form.classList.add('was-validated');
+                    
+                    // b) Mueve el foco al primer campo inválido
+                    const firstInvalidField = form.querySelector(':invalid');
+                    if (firstInvalidField) {
+                        firstInvalidField.focus();
+                    }
+                }
+            });
+        }
+        // ----------------------------------------------------------------
+        // FIN: CÓDIGO PARA EL MODAL DE CARGA
+        // ----------------------------------------------------------------
+    });
+</script>
+
+{% endblock %}

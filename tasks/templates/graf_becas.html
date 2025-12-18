@@ -1,0 +1,678 @@
+{% extends 'admin_dashboard.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<main class="container mt-5">
+    <h1 class="display-5 text-center mb-4">Estadísticas Gráficas del Aplicativo Web</h1>
+    <hr>
+    <br>
+
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header text-center bg-danger text-white">
+                    <h5 class="mb-0">Solicitudes por Estatus</h5>
+                </div>
+                <div class="card-body d-flex justify-content-center align-items-center">
+                    <canvas id="solicitudesEstatusChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header text-center bg-danger text-white">
+                    <h5 class="mb-0">Solicitudes por Fecha (Últimos 30 días)</h5>
+                </div>
+                <div class="card-body d-flex justify-content-center align-items-center">
+                    <canvas id="solicitudesFechaChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header text-center bg-danger text-white">
+                    <h5 class="mb-0">Solicitudes Creadas por Género</h5>
+                </div>
+                <div class="card-body d-flex justify-content-center align-items-center">
+                    <canvas id="solicitudesGeneroChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header text-center bg-danger text-white">
+                    <h5 class="mb-0">Solicitudes Creadas por Rango de Edad</h5>
+                </div>
+                <div class="card-body d-flex justify-content-center align-items-center">
+                    <canvas id="solicitudesEdadChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header text-center bg-danger text-white">
+                    <h5 class="mb-0">Becas Más Solicitadas</h5>
+                </div>
+                <div class="card-body d-flex justify-content-center align-items-center">
+                    <canvas id="becasMasSolicitadasChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header text-center bg-danger text-white">
+                    <h5 class="mb-0">Usuarios Registrados por Fecha (Últimos 30 días)</h5>
+                </div>
+                <div class="card-body d-flex justify-content-center align-items-center">
+                    <canvas id="usuariosFechaChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header text-center bg-danger text-white">
+                    <h5 class="mb-0">Solicitudes por Municipio (Top 10)</h5>
+                </div>
+                <div class="card-body d-flex justify-content-center align-items-center">
+                    <canvas id="solicitudesMunicipioChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header text-center bg-danger text-white">
+                    <h5 class="mb-0">Solicitudes por Parroquia (Top 10)</h5>
+                </div>
+                <div class="card-body d-flex justify-content-center align-items-center">
+                    <canvas id="solicitudesParroquiaChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-6 offset-md-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-header text-center bg-danger text-white">
+                    <h5 class="mb-0">Total de Usuarios Registrados</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong>Total de Usuarios:</strong>
+                            <span class="rounded-pill"><strong>{{ total_usuarios }}</strong></span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Analista Bienestar Estudiantil:
+                            <span class="rounded-pill">{{ analistas_bienestar }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Analista Exterior (CDCE):
+                            <span class="rounded-pill">{{ analistas_exterior }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Solicitantes:
+                            <span class="rounded-pill">{{ solicitantes }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 mb-5 d-flex justify-content-between align-items-center">
+        <a href="{% url 'admin_home' %}" class="btn btn-danger">
+            <ion-icon name="arrow-back-outline"></ion-icon> Volver atrás
+        </a>
+    </div>
+
+</main>
+{% endblock content %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script> 
+{{ labels_estatus|json_script:"labels_estatus_data" }}
+{{ data_estatus|json_script:"data_estatus_data" }}
+{{ labels_fecha|json_script:"labels_fecha_data" }}
+{{ data_fecha|json_script:"data_fecha_data" }}
+{{ data_usuarios_fecha|json_script:"data_usuarios_fecha_data" }}
+{{ labels_becas_solicitadas|json_script:"labels_becas_solicitadas_data" }}
+{{ data_becas_solicitadas|json_script:"data_becas_solicitadas_data" }}
+{{ labels_municipio|json_script:"labels_municipio_data" }}
+{{ data_municipio|json_script:"data_municipio_data" }}
+{{ labels_parroquia|json_script:"labels_parroquia_data" }}
+{{ data_parroquia|json_script:"data_parroquia_data" }}
+
+{{ labels_genero|json_script:"labels_genero_data" }}
+{{ data_genero|json_script:"data_genero_data" }}
+{{ labels_edad|json_script:"labels_edad_data" }}
+{{ data_edad|json_script:"data_edad_data" }}
+
+<script>
+    // Registro global del plugin para todas las gráficas
+    Chart.register(ChartDataLabels);
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Carga de datos existentes
+        const labelsEstatus = JSON.parse(document.getElementById('labels_estatus_data').textContent);
+        const dataEstatus = JSON.parse(document.getElementById('data_estatus_data').textContent);
+        const labelsFecha = JSON.parse(document.getElementById('labels_fecha_data').textContent);
+        const dataFecha = JSON.parse(document.getElementById('data_fecha_data').textContent);
+        const dataUsuariosFecha = JSON.parse(document.getElementById('data_usuarios_fecha_data').textContent);
+        const labelsBecasSolicitadas = JSON.parse(document.getElementById('labels_becas_solicitadas_data').textContent);
+        const dataBecasSolicitadas = JSON.parse(document.getElementById('data_becas_solicitadas_data').textContent);
+        const labelsMunicipio = JSON.parse(document.getElementById('labels_municipio_data').textContent);
+        const dataMunicipio = JSON.parse(document.getElementById('data_municipio_data').textContent);
+        const labelsParroquia = JSON.parse(document.getElementById('labels_parroquia_data').textContent);
+        const dataParroquia = JSON.parse(document.getElementById('data_parroquia_data').textContent);
+
+        // Carga de NUEVOS datos
+        const labelsGenero = JSON.parse(document.getElementById('labels_genero_data').textContent);
+        const dataGenero = JSON.parse(document.getElementById('data_genero_data').textContent);
+        const labelsEdad = JSON.parse(document.getElementById('labels_edad_data').textContent);
+        const dataEdad = JSON.parse(document.getElementById('data_edad_data').textContent);
+
+
+        function generateRandomColors(numColors) {
+            const colors = [];
+            for (let i = 0; i < numColors; i++) {
+                const r = Math.floor(Math.random() * 255);
+                const g = Math.floor(Math.random() * 255);
+                const b = Math.floor(Math.random() * 255);
+                colors.push(`rgba(${r}, ${g}, ${b}, 0.7)`);
+            }
+            return colors;
+        }
+
+        // --- Configuración de DataLabels para Donut/Pie (Muestra Porcentaje) ---
+        const doughnutDataLabelsConfig = {
+            formatter: (value, ctx) => {
+                let sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                let percentage = (value * 100 / sum).toFixed(1) + "%"; // Muestra un decimal
+                return percentage;
+            },
+            color: '#fff', 
+            font: {
+                weight: 'bold',
+                size: 18 // <<-- Aumentado a 14
+            },
+            anchor: 'end',
+            align: 'start',
+            offset: 10
+        };
+
+        // --- Configuración de DataLabels para Barras/Líneas (Muestra Valor Absoluto) ---
+        const barLineDataLabelsConfig = {
+            anchor: 'end', 
+            align: 'top',  
+            formatter: (value) => {
+                return value; 
+            },
+            color: '#000', 
+            font: {
+                weight: 'bold',
+                size: 14 // <<-- Aumentado a 14
+            }
+        };
+
+        // GRÁFICA 1: Solicitudes por Estatus (Doughnut)
+        const ctxEstatus = document.getElementById('solicitudesEstatusChart').getContext('2d');
+        if (ctxEstatus) {
+            new Chart(ctxEstatus, {
+                type: 'doughnut',
+                data: {
+                    labels: labelsEstatus,
+                    datasets: [{
+                        label: 'Número de Solicitudes',
+                        data: dataEstatus,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.7)',
+                            'rgba(255, 159, 64, 0.7)',
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(153, 102, 255, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Distribución de Solicitudes por Estatus'
+                        },
+                        datalabels: doughnutDataLabelsConfig // Aplicar config de porcentaje
+                    }
+                }
+            });
+        }
+
+        // GRÁFICA 7: Solicitudes por Género (Doughnut)
+        const ctxGenero = document.getElementById('solicitudesGeneroChart').getContext('2d');
+        if (ctxGenero) {
+            new Chart(ctxGenero, {
+                type: 'doughnut',
+                data: {
+                    labels: labelsGenero,
+                    datasets: [{
+                        label: 'Número de Solicitudes',
+                        data: dataGenero,
+                        backgroundColor: [
+                            'rgba(54, 162, 235, 0.7)', 
+                            'rgba(255, 99, 132, 0.7)', 
+                            'rgba(199, 199, 199, 0.7)' 
+                        ],
+                        borderColor: [
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(199, 199, 199, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Distribución de Solicitudes por Género'
+                        },
+                        datalabels: doughnutDataLabelsConfig // Aplicar config de porcentaje
+                    }
+                }
+            });
+        }
+
+        // GRÁFICA 8: Solicitudes por Rango de Edad (Barra)
+        const ctxEdad = document.getElementById('solicitudesEdadChart').getContext('2d');
+        if (ctxEdad) {
+            new Chart(ctxEdad, {
+                type: 'bar',
+                data: {
+                    labels: labelsEdad,
+                    datasets: [{
+                        label: 'Número de Solicitudes',
+                        data: dataEdad,
+                        backgroundColor: generateRandomColors(labelsEdad.length),
+                        borderColor: generateRandomColors(labelsEdad.length).map(color => color.replace('0.7', '1')),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Distribución de Solicitudes por Rango de Edad'
+                        },
+                        datalabels: barLineDataLabelsConfig // Aplicar config de valor absoluto
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Cantidad de Solicitudes'
+                            },
+                            ticks: {
+                                precision: 0
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Rango de Edad'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Gráfica 2: Solicitudes por Fecha (Líneas)
+        const ctxFecha = document.getElementById('solicitudesFechaChart').getContext('2d');
+        if (ctxFecha) {
+            new Chart(ctxFecha, {
+                type: 'line',
+                data: {
+                    labels: labelsFecha,
+                    datasets: [{
+                        label: 'Solicitudes Creadas',
+                        backgroundColor: 'rgba(231, 76, 60, 0.2)',
+                        borderColor: 'rgba(231, 76, 60, 1)',
+                        data: dataFecha,
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Solicitudes Creadas en los Últimos 30 Días'
+                        },
+                        datalabels: barLineDataLabelsConfig // Aplicar config de valor absoluto
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Número de Solicitudes'
+                            },
+                            ticks: {
+                                precision: 0
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Fecha'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Gráfica 4: Usuarios Registrados por Fecha (Barras)
+        const ctxUsuariosFecha = document.getElementById('usuariosFechaChart').getContext('2d');
+        if (ctxUsuariosFecha) {
+            new Chart(ctxUsuariosFecha, {
+                type: 'bar',
+                data: {
+                    labels: labelsFecha,
+                    datasets: [{
+                        label: 'Usuarios Registrados',
+                        backgroundColor: 'rgba(231, 76, 60, 0.7)',
+                        borderColor: 'rgba(231, 76, 60, 1)',
+                        data: dataUsuariosFecha,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Usuarios Registrados en los Últimos 30 Días'
+                        },
+                        datalabels: barLineDataLabelsConfig // Aplicar config de valor absoluto
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Número de Usuarios'
+                            },
+                            ticks: {
+                                precision: 0
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Fecha'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Gráfica 3: Becas Más Solicitadas (Barras)
+        const ctxBecasMasSolicitadas = document.getElementById('becasMasSolicitadasChart').getContext('2d');
+        if (ctxBecasMasSolicitadas) {
+            new Chart(ctxBecasMasSolicitadas, {
+                type: 'bar',
+                data: {
+                    labels: labelsBecasSolicitadas,
+                    datasets: [{
+                        label: 'Número de Solicitudes',
+                        data: dataBecasSolicitadas,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.7)',
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(153, 102, 255, 0.7)',
+                            'rgba(255, 159, 64, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', // Convertir a barras horizontales para mejor visualización de nombres largos
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Top 5 Becas Más Solicitadas'
+                        },
+                        datalabels: barLineDataLabelsConfig // Aplicar config de valor absoluto
+                    },
+                    scales: {
+                        x: { // Eje X para barras horizontales
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Cantidad de Solicitudes'
+                            },
+                            ticks: {
+                                precision: 0
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Tipo de Beca'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Colores similares a las becas más solicitadas para Municipio y Parroquia
+        const municipalityColors = [
+            'rgba(255, 99, 132, 0.7)', // Rojo
+            'rgba(54, 162, 235, 0.7)', // Azul
+            'rgba(255, 206, 86, 0.7)', // Amarillo
+            'rgba(75, 192, 192, 0.7)', // Cian
+            'rgba(153, 102, 255, 0.7)', // Púrpura
+            'rgba(255, 159, 64, 0.7)', // Naranja
+            'rgba(199, 199, 199, 0.7)', // Gris
+            'rgba(83, 102, 255, 0.7)', // Azul fuerte
+            'rgba(40, 159, 64, 0.7)', // Verde
+            'rgba(200, 50, 50, 0.7)' // Rojo oscuro
+        ];
+
+        const municipalityBorderColors = [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(199, 199, 199, 1)',
+            'rgba(83, 102, 255, 1)',
+            'rgba(40, 159, 64, 1)',
+            'rgba(200, 50, 50, 1)'
+        ];
+
+        const parishColors = [
+            'rgba(54, 162, 235, 0.7)', // Azul
+            'rgba(255, 99, 132, 0.7)', // Rojo
+            'rgba(75, 192, 192, 0.7)', // Cian
+            'rgba(255, 159, 64, 0.7)', // Naranja
+            'rgba(153, 102, 255, 0.7)', // Púrpura
+            'rgba(255, 206, 86, 0.7)', // Amarillo
+            'rgba(100, 100, 200, 0.7)', // Azul grisáceo
+            'rgba(200, 100, 100, 0.7)', // Rosa
+            'rgba(50, 200, 50, 0.7)', // Verde claro
+            'rgba(120, 80, 240, 0.7)' // Púrpura claro
+        ];
+
+        const parishBorderColors = [
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 99, 132, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(100, 100, 200, 1)',
+            'rgba(200, 100, 100, 1)',
+            'rgba(50, 200, 50, 1)',
+            'rgba(120, 80, 240, 1)'
+        ];
+
+        // Gráfica 5: Solicitudes por Municipio (Barras)
+        const ctxMunicipio = document.getElementById('solicitudesMunicipioChart').getContext('2d');
+        if (ctxMunicipio) {
+            new Chart(ctxMunicipio, {
+                type: 'bar',
+                data: {
+                    labels: labelsMunicipio,
+                    datasets: [{
+                        label: 'Número de Solicitudes',
+                        data: dataMunicipio,
+                        backgroundColor: municipalityColors.slice(0, labelsMunicipio.length),
+                        borderColor: municipalityBorderColors.slice(0, labelsMunicipio.length),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Solicitudes por Municipio'
+                        },
+                        datalabels: barLineDataLabelsConfig // Aplicar config de valor absoluto
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Cantidad de Solicitudes'
+                            },
+                            ticks: {
+                                precision: 0
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Municipio'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Gráfica 6: Solicitudes por Parroquia (Barras)
+        const ctxParroquia = document.getElementById('solicitudesParroquiaChart').getContext('2d');
+        if (ctxParroquia) {
+            new Chart(ctxParroquia, {
+                type: 'bar',
+                data: {
+                    labels: labelsParroquia,
+                    datasets: [{
+                        label: 'Número de Solicitudes',
+                        data: dataParroquia,
+                        backgroundColor: parishColors.slice(0, labelsParroquia.length),
+                        borderColor: parishBorderColors.slice(0, labelsParroquia.length),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Solicitudes por Parroquia'
+                        },
+                        datalabels: barLineDataLabelsConfig // Aplicar config de valor absoluto
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Cantidad de Solicitudes'
+                            },
+                            ticks: {
+                                precision: 0
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Parroquia'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    });
+</script>
+{% endblock extra_js %}

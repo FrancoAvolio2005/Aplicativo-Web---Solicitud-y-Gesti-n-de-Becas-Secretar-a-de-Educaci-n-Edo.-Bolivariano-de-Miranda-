@@ -1,0 +1,114 @@
+<!-- Archivo (.html) para realizar el logeo a una cuenta de los usuarios solicitantes por la aplicación,
+para realizar está acción previamente se tuvo que completar exitosamente el registro de la persona por el sitio web, archivo que
+hace referencia al (signup.html) -->
+
+{% extends 'base.html' %}
+{% block content %}
+
+<main class="container">
+    <div class="row justify-content-center">
+
+<!-- Se utiliza un Un div con clases row justify-content-center y col-md-6 que centra el formulario en la página y le limita el ancho
+a la mitad en pantallas medianas y grandes.-->
+
+        <div class="col-md-6 mt-5">
+
+<!-- El <form method="POST" ...> esta configurado para enviar los datos mediante el método POST, esencial para el inicio de sesión. Está contenido
+en una tarjeta (card) con sombra (shadow-lg).-->
+
+            <form method="POST" class="card card-body shadow-lg mb-5">
+
+<!-- Muestra la imagen institucional (../static/img/gobernacion.png) centrada, reforzando la marca. -->
+
+                <div style="text-align: center;">
+                    <img src="../static/img/gobernacion.png" height="150px" width="160px">
+                </div>
+                <hr>
+                <h1 class="text-center">Iniciar Sesión</h1>
+
+<!-- El (if error) es bloque condicional de Django que muestra un mensaje de alerta rojo (alert-danger) si la vista le pasa una variable error (típicamente usada para indicar
+credenciales incorrectas). -->
+
+                {% if error %}
+                    <div class="alert alert-danger">
+                        {{ error }}
+                    </div>
+                {% endif %}
+
+<!-- El (csrf_token) es una etiqueta de seguridad obligatoria de Django que protege el formulario contra ataques de falsificación de petición en sitios cruzados (CSRF). -->
+
+                {% csrf_token %}
+
+<!-- Están agrupados dentro de un fieldset con un título (<legend>Datos de Acceso</legend>). Incluye campos obligatorios (required) para el Nombre de usuario y la Contraseña. -->
+
+                <fieldset class="form-group border p-3 mb-3">
+                    <legend class="border-bottom pb-1">Datos de Acceso</legend>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Nombre de usuario:</label>
+                        <input type="text" name="username" class="form-control" id="username" placeholder="Ingresa el nombre de usuario" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Contraseña:</label>
+                        <div class="input-group">
+                            <input type="password" name="password" class="form-control" id="password" placeholder="Ingresa contraseña" required>
+                            <button type="button" class="input-group-text" id="togglePassword">
+                                <ion-icon name="eye-outline"></ion-icon>
+                            </button>
+                        </div>
+                    </div>
+                </fieldset>
+
+<!-- El <button class="btn btn-warning">Iniciar Sesión</button> es un botón principal con el color amarillo de Bootstrap, que permite
+realizar la función de completar el formulario para loguearse en la aplicación. -->
+
+                <button class="btn btn-warning">
+                    Iniciar Sesión
+                </button>
+
+<!-- Un texto pequeño (<small>) con un enlace para redirigir a los usuarios que aún no tienen cuenta a la página de registro (signup.html). -->
+
+                <small class="text-muted mt-3 d-block text-center">
+                    ¿No tienes una cuenta? <a href="{% url 'signup' %}">Regístrate aquí</a>
+                </small>
+            </form>
+        </div>
+    </div>
+</main>
+
+<hr>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+<!-- El código incluye un bloque de JavaScript al final para añadir una funcionalidad de poder visualizar la contraseña en el formulario:
+
+Se utiliza un input-group de Bootstrap, que adjunta un botón con un icono de ojo de Ionicons (eye-outline) al campo de la contraseña.
+
+La funcionalidad para que el Script cumpla su tarea es la siguiente:
+
+Cuando se hace clic en el botón con el ojo (togglePassword):
+
+Verifica el tipo de atributo del campo de contraseña (type).
+
+Si es 'password', lo cambia a 'text' (para mostrar el texto). Si es 'text', lo cambia a 'password' (para ocultarlo).
+
+Simultáneamente, cambia el icono del ojo de "abierto" (eye-outline) a "cerrado" (eye-off-outline) para indicar el estado actual de visibilidad de la contraseña. -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const togglePassword = document.querySelector('#togglePassword');
+        const passwordInput = document.querySelector('#password');
+
+        togglePassword.addEventListener('click', function () {
+
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+
+            const icon = this.querySelector('ion-icon');
+            const iconName = icon.getAttribute('name') === 'eye-outline' ? 'eye-off-outline' : 'eye-outline';
+            icon.setAttribute('name', iconName);
+        });
+    });
+</script>
+
+{% endblock %}

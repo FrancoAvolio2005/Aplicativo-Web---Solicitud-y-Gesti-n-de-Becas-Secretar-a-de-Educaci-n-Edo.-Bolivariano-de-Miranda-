@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container-fluid p-0">
+    <header class="mb-5">
+        <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="{% static 'img/educacion_1.jpg' %}" class="d-block w-100 hero-img" alt="Estudiantes en aula">
+                    <div class="carousel-caption d-none d-md-block text-start">
+                        {% if user.is_authenticated %}
+                            <h1 class="display-3 fw-bold text-white shadow-text">¡Hola, {{ user.username }}!</h1>
+                            <p class="lead text-white shadow-text">Tu portal a las oportunidades educativas de Miranda.</p>
+                        {% else %}
+                            <h1 class="display-3 fw-bold text-white shadow-text">Educación de Calidad para el Futuro de Miranda</h1>
+                            <p class="lead text-white shadow-text">Un compromiso con la excelencia, la inclusión y el desarrollo integral.</p>
+                            <a href="/signup" class="btn btn-warning btn-lg shadow-sm mt-3">¡Únete a la Comunidad!</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="{% static 'img/programa_social.jpg' %}" class="d-block w-100 hero-img" alt="Jóvenes participando en programa">
+                    <div class="carousel-caption d-none d-md-block text-end">
+                        <h2 class="display-4 fw-bold text-white shadow-text">Descubre Nuestras Becas</h2>
+                        <p class="lead text-white shadow-text">Innovación y apoyo en cada nivel educativo.</p>
+                        <a href="/becas" class="btn btn-warning btn-lg shadow-sm mt-3">Ver más...</a>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Siguiente</span>
+            </button>
+        </div>
+    </header>
+</div>
+
+<main class="container py-5">
+    
+    <section class="text-center mb-5 p-4 bg-light rounded-3 shadow">
+        <h1 class="display-1 text-center">Secretaría de Educación del Estado Bolivariano de Miranda</h1>
+        <p class="lead text-muted mx-auto" style="max-width: 800px;">
+            Entidad gubernamental encargada de diseñar, ejecutar y coordinar las políticas públicas en materia de educación. Algunas de sus responsabilidades clave incluyen; garantizar la excelencia educativa, trabajar para asegurar que los ciudadanos tengan acceso a una educación de calidad, independientemente del nivel o modalidad educativa que requieran y del lugar donde la demanden, es responsable del diseño, control, acreditación e implementación de los programas académicos en todo el país. Asimismo de llevar a cabo funciones con fines educativos, científicos, deportivos y culturales que tengan como locación en el Edo – Bolivariano de Miranda.
+        </p>
+        <hr class="my-4">
+        
+        <div class="row justify-content-center">
+            
+            <div class="col-6 col-md-4 mb-3 mb-md-0">
+                <img 
+                    src="{% static 'img/bandera_miranda.jpg' %}" 
+                    class="img-fluid rounded-3 shadow-sm h-100 w-100 object-fit-cover" 
+                    alt="Bandera del Estado Miranda"
+                    style="max-height: 200px;"
+                >
+            </div>
+            
+            <div class="col-6 col-md-4">
+                <img 
+                    src="{% static 'img/fondo.jpg' %}" 
+                    class="img-fluid rounded-3 shadow-sm h-100 w-100 object-fit-cover" 
+                    alt="Imagen institucional de fondo"
+                    style="max-height: 200px;"
+                >
+            </div>
+            
+        </div>
+        </section>
+
+    <hr class="my-5">
+
+    <section class="row justify-content-center text-center">
+        <h2 class="mb-4 text-center">Nuestro Compromiso</h2>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center shadow">
+                <div class="card-body">
+                    <ion-icon name="eye-outline" class="display-4 text-warning mb-3"></ion-icon>
+                    <h5 class="card-title">Misión</h5>
+                    <p class="card-text text-muted">Liderar la transformación educativa del estado, garantizando una educación inclusiva y de calidad para todos los mirandinos.</p>
+                    <a href="info/#mision" class="btn btn-warning mt-3">Ver más...</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center shadow">
+                <div class="card-body">
+                    <ion-icon name="diamond-outline" class="display-4 text-warning mb-3"></ion-icon>
+                    <h5 class="card-title">Visión</h5>
+                    <p class="card-text text-muted">Ser un referente nacional en excelencia educativa, con ciudadanos formados integralmente, críticos y comprometidos con el desarrollo del estado.</p>
+                    <a href="info/#vision" class="btn btn-warning mt-3">Ver más...</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 text-center shadow">
+                <div class="card-body">
+                    <ion-icon name="golf-outline" class="display-4 text-warning mb-3"></ion-icon>
+                    <h5 class="card-title">Función</h5>
+                    <p class="card-text text-muted">Diseñar y ejecutar políticas públicas, programas académicos y actividades culturales para el desarrollo educativo del estado Miranda.</p>
+                    <a href="info/#funcion" class="btn btn-warning mt-3">Ver más...</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="my-5">
+
+</main>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+<style>
+    .hero-img {
+        height: 50vh;
+        object-fit: cover;
+        filter: brightness(0.4);
+    }
+    .carousel-caption {
+        bottom: 20%;
+    }
+    .shadow-text {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    }
+    .hover-scale {
+        transition: transform 0.3s ease-in-out;
+    }
+    .hover-scale:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
+    }
+    .hover-scale-2 {
+        transition: transform 0.3s ease-in-out;
+    }
+    .hover-scale-2:hover {
+        transform: scale(1.02);
+    }
+</style>
+
+{% endblock %}

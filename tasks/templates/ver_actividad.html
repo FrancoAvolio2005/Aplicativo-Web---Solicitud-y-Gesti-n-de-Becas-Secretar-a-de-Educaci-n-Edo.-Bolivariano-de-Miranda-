@@ -1,0 +1,139 @@
+<!-- Este código es una plantilla de Django que crea una página de panel de administrador para ver el historial de actividad de los usuarios regulares del sistema. Utiliza Bootstrap para el diseño y JavaScript (con Fetch API) para cargar el historial de actividad
+de cada usuario de forma dinámica en una ventana modal. -->
+
+{% extends 'admin_dashboard.html' %}
+{% load static %}
+
+{% block content %}
+
+{% if messages %} <!-- Muestra mensajes del sistema (como alertas de éxito o error de una acción anterior) usando la estructura de alertas de Bootstrap. -->
+    <div class="container mt-4">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<div class="container py-4">
+    <h1 class="display-5 text-center mb-4">Actividad de Usuarios</h1>
+    <p class="fs-5 text-muted text-center mb-4">
+        Consulta el historial de actividad de los usuarios. Se muestran solo los usuarios regulares.
+    </p>
+    <hr>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover"> <!-- Define una tabla responsiva para listar a los usuarios. -->
+            <thead class="table-warning">
+                <tr>
+                    <th>Nombre de Usuario</th>
+                    <th>Nombres y Apellidos</th>
+                    <th>Correo Electrónico</th>
+                    <th>Cédula de Identidad</th>
+                    <th>Historial</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in normal_users %} <!-- Itera sobre una lista de usuarios regulares (normal_users) que debe ser pasada desde la vista de Django. -->
+<tr>
+    <td>{{ user.username }}</td>
+    <td>{{ user.profile.nombre_completo }} {{ user.profile.apellido_completo }}</td>
+    <td>{{ user.email }}</td>
+    <td>{{ user.profile.cedula_identidad }}</td>
+    <td>
+        <button type="button" class="btn btn-warning btn-sm" 
+                data-bs-toggle="modal" data-bs-target="#activityModal"
+                data-user-id="{{ user.id }}">
+            Ver actividad
+        </button> <!-- Define una ventana emergente de Bootstrap que se mostrará cuando se haga clic en "Ver actividad". -->
+    </td>
+</tr>
+{% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="activityModal" tabindex="-1" aria-labelledby="activityModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title" id="activityModalLabel">Historial de Actividad</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="modal-content-placeholder">
+                    <p class="text-center">Cargando actividad...</p>
+                </div> <!-- Es un contenedor que inicialmente muestra "Cargando actividad..." y será reemplazado dinámicamente por el contenido del historial de actividad cargado con AJAX. -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var activityModal = document.getElementById('activityModal');
+        activityModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var userId = button.getAttribute('data-user-id');
+            var modalTitle = activityModal.querySelector('.modal-title');
+            var modalBody = activityModal.querySelector('#modal-content-placeholder');
+            
+            modalBody.innerHTML = '<p class="text-center">Cargando actividad...</p>';
+
+            fetch(`/get_user_activity/${userId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    modalTitle.textContent = `Historial de Actividad de ${data.user.username}`;
+                    
+                    let content = `
+                        <h6>Datos de Acceso</h6>
+                        <ul>
+                            <li><strong>Nombre de Usuario:</strong> ${data.user.username}</li>
+                            <li><strong>Correo Electrónico:</strong> ${data.user.email || 'N/A'}</li>
+                            <li><strong>Fecha de creación de la cuenta:</strong> ${new Date(data.user.date_joined).toLocaleString()}</li>
+                            <li><strong>Último inicio de sesión:</strong> ${data.user.last_login ? new Date(data.user.last_login).toLocaleString() : 'N/A'}</li>
+                        </ul>
+                        <hr>
+                        <h6>Datos Personales</h6>
+                        <ul>
+                            <li><strong>Nombre completo:</strong> ${data.user.nombre_completo || 'N/A'} ${data.user.apellido_completo || 'N/A'}</li>
+                            <li><strong>Edad:</strong> ${data.user.edad || 'N/A'}</li>
+                            <li><strong>Género:</strong> ${data.user.genero || 'N/A'}</li>
+                            <li><strong>Teléfono:</strong> ${data.user.numero_telefono || 'N/A'}</li>
+                            <li><strong>Cédula:</strong> ${data.user.cedula_identidad || 'N/A'}</li>
+                        </ul>
+                        <hr>
+                        <h6>Actividad en Solicitudes</h6>
+                    `;
+
+                    if (data.solicitudes.length > 0) {
+                        content += '<ul class="list-group list-group-flush">';
+                        data.solicitudes.forEach(solicitud => {
+                            content += `<li class="list-group-item">
+                                <strong>ID de Solicitud:</strong> ${solicitud.id_solicitud}<br>
+                                <strong>Fecha de Creación:</strong> ${new Date(solicitud.fecha_creacion).toLocaleString()}<br>
+                                <strong>Estatus:</strong> ${solicitud.estatus_beca}<br>
+                                <strong>Beca:</strong> ${solicitud.beca}
+                                </li>`;
+                        });
+                        content += '</ul>';
+                    } else {
+                        content += '<p>Este usuario no tiene solicitudes registradas.</p>';
+                    }
+
+                    modalBody.innerHTML = content;
+                })
+                .catch(error => {
+                    console.error('Error al obtener los datos:', error);
+                    modalBody.innerHTML = '<p class="text-danger text-center">Error al cargar la actividad. Por favor, inténtelo de nuevo.</p>';
+                });
+        });
+    });
+</script>
+
+{% endblock %}

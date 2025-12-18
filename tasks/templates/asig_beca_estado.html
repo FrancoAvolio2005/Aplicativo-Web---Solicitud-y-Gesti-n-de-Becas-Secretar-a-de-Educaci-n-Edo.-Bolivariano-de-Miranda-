@@ -1,0 +1,228 @@
+<!-- Archivo que te permite visualizar la información detalla de la solicitud con el estado de "Aprobada", la idea es cambiar a "Asignada", para darle finalización
+al proceso de la solicitud por la aplicación -->
+
+{% extends 'admin_dashboard.html' %}
+{% load static %}
+{% block content %}
+
+<main class="container py-4">
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
+            <h2 class="display-6 text-center mb-4">Detalles de la Solicitud <strong>#{{ solicitud.id_solicitud }} </strong></h2>
+            <hr class="mb-5">
+
+            <div class="card shadow-lg p-4 mb-5 border-0 rounded-4">
+                <div class="card-body">
+
+                    <div class="mb-5">
+                        <h4 class="mb-3 border-bottom pb-2">Datos de la Solicitud</h4>
+                        <div class="row row-cols-1 row-cols-md-2 g-3 mb-4">
+                            <div class="col">
+                                <strong>Nombre del Solicitante:</strong> {{ solicitud.user.get_full_name|default:solicitud.user.username }}
+                            </div>
+                            <div class="col">
+                                <strong>Correo Electrónico:</strong> {{ solicitud.user.email }}
+                            </div>
+                            <div class="col">
+                                <strong>Beca Solicitada:</strong> {{ solicitud.beca.nombre|default:"No especificada" }}
+                            </div>
+                            <div class="col">
+                                <strong>Estatus de la Beca:</strong>
+                                {% if solicitud.estatus_beca.nombre == 'Aprobada' %}
+                                    <span class="badge bg-warning text-dark fs-6">{{ solicitud.estatus_beca.nombre|default:"Desconocido" }}</span>
+                                {% elif solicitud.estatus_beca.nombre == 'Rechazada' %}
+                                    <span class="badge bg-danger text-white fs-6">{{ solicitud.estatus_beca.nombre|default:"Desconocido" }}</span>
+                                {% elif solicitud.estatus_beca.nombre == 'Asignada' %}
+                                    <span class="badge bg-info text-dark fs-6">{{ solicitud.estatus_beca.nombre|default:"Desconocido" }}</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark fs-6">{{ solicitud.estatus_beca.nombre|default:"Desconocido" }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="col-12">
+                                <strong>Fecha de Solicitud:</strong> {{ solicitud.fecha_creacion|date:"d M Y H:i" }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <h4 class="mb-3 border-bottom pb-2">Datos del Estudiante</h4>
+                        <div class="row row-cols-1 row-cols-md-2 g-3 mb-4">
+                            <div class="col">
+                                <strong>Nombre Completo:</strong> {{ solicitud.nombre_becario|default:"N/A" }} {{ solicitud.apellido_becario|default:"" }}
+                            </div>
+                            <div class="col">
+                                <strong>Cédula:</strong> {{ solicitud.cedula_becario|default:"N/A" }}
+                            </div>
+                            <div class="col">
+                                <strong>Edad:</strong> {{ solicitud.edad_becario|default:"N/A" }}
+                            </div>
+                            <div class="col">
+                                <strong>Fecha de Nacimiento:</strong> {{ solicitud.fecha_nacimiento_becario|default:"N/A" }}
+                            </div>
+                            <div class="col">
+                                <strong>Nacionalidad:</strong> {{ solicitud.nacionalidad_becario|default:"N/A" }}
+                            </div>
+                            <div class="col-12">
+                                <strong>Dirección Residencial:</strong> {{ solicitud.direccion_residencial_becario|default:"N/A" }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-5">
+
+                    <div class="mb-5">
+                        <h4 class="mb-3 border-bottom pb-2">Ubicación y Plantel</h4>
+                        <div class="row row-cols-1 row-cols-md-3 g-3 mb-4">
+                            <div class="col">
+                                <strong>Estado:</strong> {{ solicitud.estado.nombre|default:"N/A" }}
+                            </div>
+                            <div class="col">
+                                <strong>Municipio:</strong> {{ solicitud.municipio.nombre|default:"N/A" }}
+                            </div>
+                            <div class="col">
+                                <strong>Parroquia:</strong> {{ solicitud.parroquia.nombre|default:"N/A" }}
+                            </div>
+                            <div class="col-12">
+                                <strong>Institución Educativa:</strong> {{ solicitud.plantel.nombre_plantel|default:"N/A" }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-5">
+
+                    <div class="mb-5">
+                        <h4 class="mb-3 border-bottom pb-2">Información Bancaria</h4>
+                        <div class="row row-cols-1 row-cols-md-2 g-3 mb-4"> {# Use g-3 for gutter #}
+                            <div class="col">
+                                <strong>Banco:</strong> {{ solicitud.banco.nombre|default:"No especificado" }}
+                            </div>
+                            <div class="col">
+                                <strong>Número de Cuenta:</strong> {{ solicitud.numero_de_cuenta|default:"No proporcionado" }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-5"> 
+
+                    <div class="mb-5">
+                        <h4 class="mb-3 border-bottom pb-2">Documentos Adjuntos</h4> 
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">Tipo de Documento</th>
+                                        <th scope="col" class="text-center">Estado</th>
+                                        <th scope="col" class="text-center">Visualizar</th>
+                                        <th scope="col" class="text-center">Miniatura</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Constancia de Estudios</td>
+                                        <td class="text-center">
+                                            {% if solicitud.constancia_estudios %}<span class="badge bg-warning text-dark">Adjunto</span>{% else %}<span class="badge bg-danger">Falta</span>{% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if solicitud.constancia_estudios %}
+                                                <!-- El enlace abre la imagen en tamaño completo en una nueva pestaña -->
+                                                <a href="{{ solicitud.constancia_estudios.url }}" target="_blank" class="btn btn-outline-primary btn-sm">Ver</a>
+                                            {% else %}
+                                                N/A
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if solicitud.constancia_estudios %}
+                                                <img src="{{ solicitud.constancia_estudios.url }}" alt="Constancia" class="img-fluid rounded" style="max-height: 80px; object-fit: contain;">
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Constancia de Número de Cuenta Bancaria</td>
+                                        <td class="text-center">
+                                            {% if solicitud.constancia_numero_cuenta %}<span class="badge bg-warning text-dark">Adjunto</span>{% else %}<span class="badge bg-danger">Falta</span>{% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if solicitud.constancia_numero_cuenta %}
+                                                <!-- El enlace abre la imagen en tamaño completo en una nueva pestaña -->
+                                                <a href="{{ solicitud.constancia_numero_cuenta.url }}" target="_blank" class="btn btn-outline-primary btn-sm">Ver</a>
+                                            {% else %}
+                                                N/A
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if solicitud.constancia_numero_cuenta %}
+                                                <img src="{{ solicitud.constancia_numero_cuenta.url }}" alt="Constancia" class="img-fluid rounded" style="max-height: 80px; object-fit: contain;">
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Boletín</td>
+                                        <td class="text-center">
+                                            {% if solicitud.boletin %}<span class="badge bg-warning text-dark">Adjunto</span>{% else %}<span class="badge bg-danger">Falta</span>{% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if solicitud.boletin %}
+                                                <a href="{{ solicitud.boletin.url }}" target="_blank" class="btn btn-outline-primary btn-sm">Ver</a>
+                                            {% else %}
+                                                N/A
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if solicitud.boletin %}
+                                                <img src="{{ solicitud.boletin.url }}" alt="Boletín" class="img-fluid rounded" style="max-height: 80px; object-fit: contain;">
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cédula de Identidad</td>
+                                        <td class="text-center">
+                                            {% if solicitud.cedula %}<span class="badge bg-warning text-dark">Adjunto</span>{% else %}<span class="badge bg-danger">Falta</span>{% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if solicitud.cedula %}
+                                                <a href="{{ solicitud.cedula.url }}" target="_blank" class="btn btn-outline-primary btn-sm">Ver</a>
+                                            {% else %}
+                                                N/A
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if solicitud.cedula %}
+                                                <img src="{{ solicitud.cedula.url }}" alt="Cédula" class="img-fluid rounded" style="max-height: 80px; object-fit: contain;">
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div> 
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="javascript:history.back()" class="btn btn-danger btn-lg">
+                    <ion-icon name="arrow-back-outline" class="me-2 align-middle" style="font-size: 1.3rem;"></ion-icon> Volver atrás <!-- Botón realizado con JavaScript para regresar a la página anterior, utilizando el history.back() -->
+                </a>
+
+                <!-- Condicional que verifica que la solicitud actual tiene el estatus de "Aprobada", en caso de ser así, se le muestra un botón amarillo (btn btn-warning), que te permite cambiar el estatus a "Asignada" -->
+
+                {% if solicitud.estatus_beca.nombre == 'Aprobada' %}
+                    <a href="{% url 'gestionar_solicitud' solicitud_id=solicitud.id_solicitud accion='asignar' %}" class="btn btn-warning btn-lg" onclick="return confirm('¿Estás seguro de que quieres ASIGNAR esta solicitud a esa BECA?');"> <!-- se utiliza el método onclick a manera de preguntar si está seguro de realizar esa acción, tiene la posibilidad de cancelar el proceso -->
+                        Asignar <ion-icon name="checkmark-outline" class="ms-2 align-middle" style="font-size: 1.3rem;"></ion-icon>
+                    </a>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</main>
+
+{% endblock %}

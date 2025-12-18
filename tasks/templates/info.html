@@ -1,0 +1,176 @@
+<!-- Este código es una plantilla de Django que presenta la Misión, Visión y Función de la Secretaría de Educación del Estado Miranda".
+
+La estructura utiliza Bootstrap para el diseño y listas estilizadas, y se enfoca en comunicar los objetivos y responsabilidades de la entidad de manera detallada. -->
+
+<!-- La presencia de identificadores (id="mision", id="vision", id="funcion") es importante porque permite que otras páginas (como la Homepage) enlacen directamente a
+estas secciones específicas mediante URL con hash (ej: info/#mision). -->
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container my-5">
+<hr class="my-5">
+
+<div class="row" id="mision">
+    <div class="col-lg-10 offset-lg-1">
+        <h2 class="text-center mb-4 h3 fw-bold text-dark d-flex justify-content-center align-items-center">
+            Misión
+            <ion-icon name="diamond-outline" class="text-secondary ms-2" style="font-size: 2.5rem;"></ion-icon>
+        </h2>
+        <div class="card border-0 shadow-lg mb-5">
+            <div class="card-body p-5">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item border-0 pb-3 d-flex align-items-start">
+                        <i class="bi bi-check-circle-fill text-success me-3 fs-4"></i>
+                        <div>
+                            Garantizar una educación <strong>democrática, participativa, protagónica, multiétnica y pluricultural</strong> para niños, niñas, adolescentes y jóvenes del estado Miranda, sin ningún tipo de discriminación.
+                        </div>
+                    </li>
+                    <li class="list-group-item border-0 pb-3 d-flex align-items-start">
+                        <i class="bi bi-check-circle-fill text-success me-3 fs-4"></i>
+                        <div>
+                            Formar integralmente a los estudiantes, <strong>rescatando el ideario bolivariano</strong> y fomentando la reflexión crítica, la creatividad y la autonomía.
+                        </div>
+                    </li>
+                    <li class="list-group-item border-0 pb-3 d-flex align-items-start">
+                        <i class="bi bi-check-circle-fill text-success me-3 fs-4"></i>
+                        <div>
+                            Establecer una <strong>relación amplia con la comunidad</strong>, haciéndola participativa, activa y protagónica, para lograr un cambio del sistema educativo acorde con los propósitos de construir una nueva sociedad.
+                        </div>
+                    </li>
+                    <li class="list-group-item border-0 pb-1 d-flex align-items-start">
+                        <i class="bi bi-check-circle-fill text-success me-3 fs-4"></i>
+                        <div>
+                            Promover la formación de nuevos ciudadanos con <strong>ideas transformadoras y revolucionarias</strong>, actitud emprendedora y respeto por sí mismos y sus congéneres, a través de la aplicación de soluciones originales.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<div class="row" id="vision">
+    <div class="col-lg-10 offset-lg-1">
+        <h2 class="text-center mb-4 h3 fw-bold text-dark d-flex justify-content-center align-items-center">
+            Visión
+            <ion-icon name="eye-outline" class="text-secondary ms-2" style="font-size: 2.5rem;"></ion-icon>
+        </h2>
+        <div class="card border-0 shadow-lg mb-5">
+            <div class="card-body p-5">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item border-0 pb-3 d-flex align-items-start">
+                        <i class="bi bi-eye-fill text-info me-3 fs-4"></i>
+                        <div>
+                            Ser un ente rector que provee una <strong>educación de calidad, democrática y multicultural</strong>, basada en los principios bolivarianos, con el objetivo de formar seres humanos integrales y honorables.
+                        </div>
+                    </li>
+                    <li class="list-group-item border-0 pb-3 d-flex align-items-start">
+                        <i class="bi bi-eye-fill text-info me-3 fs-4"></i>
+                        <div>
+                            Consolidar un sistema educativo que desarrolle en los estudiantes las <strong>capacidades y potencialidades científico-técnicas</strong> que sustenten la soberanía tecnológica, indispensables para lograr la independencia económica y política.
+                        </div>
+                    </li>
+                    <li class="list-group-item border-0 pb-1 d-flex align-items-start">
+                        <i class="bi bi-eye-fill text-info me-3 fs-4"></i>
+                        <div>
+                            Ser reconocidos socialmente por la <strong>calidad académica</strong> y la formación de ciudadanos comprometidos con el desarrollo endógeno-comunitario y la justicia social.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<div class="row" id="funcion">
+    <div class="col-lg-10 offset-lg-1">
+        <h2 class="text-center mb-4 h3 fw-bold text-dark d-flex justify-content-center align-items-center">
+            Función
+            <ion-icon name="golf-outline" class="text-secondary ms-2" style="font-size: 2.5rem;"></ion-icon>
+        </h2>
+        <div class="card border-0 shadow-lg mb-5">
+            <div class="card-body p-5">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item border-0 pb-3 d-flex align-items-start">
+                        <i class="bi bi-gear-fill text-secondary me-3 fs-4"></i>
+                        <div>
+                            <strong>Implementar y cumplir la ley educativa del estado:</strong> Asegurar que las leyes y normativas educativas nacionales y regionales se apliquen en todas las instituciones bajo su jurisdicción.
+                        </div>
+                    </li>
+                    <li class="list-group-item border-0 pb-3 d-flex align-items-start">
+                        <i class="bi bi-gear-fill text-secondary me-3 fs-4"></i>
+                        <div>
+                            <strong>Diseñar y formular programas educativos:</strong> Crear y adaptar programas de educación, cultura, ciencia, tecnología y deportes, basándose en las directrices federales y las necesidades locales.
+                        </div>
+                    </li>
+                    <li class="list-group-item border-0 pb-3 d-flex align-items-start">
+                        <i class="bi bi-gear-fill text-secondary me-3 fs-4"></i>
+                        <div>
+                            <strong>Planificar, desarrollar, impartir, vigilar y evaluar los servicios educativos:</strong> Supervisar el funcionamiento de las escuelas, desde la oferta académica hasta la calidad de la enseñanza y el aprendizaje.
+                        </div>
+                    </li>
+                    <li class="list-group-item border-0 pb-3 d-flex align-items-start">
+                        <i class="bi bi-gear-fill text-secondary me-3 fs-4"></i>
+                        <div>
+                            <strong>Promover la formación integral:</strong> Desarrollar actividades que fomenten los Derechos Humanos, la cultura de paz, la convivencia solidaria, la creatividad y el pensamiento crítico.
+                        </div>
+                    </li>
+                    <li class="list-group-item border-0 pb-3 d-flex align-items-start">
+                        <i class="bi bi-gear-fill text-secondary me-3 fs-4"></i>
+                        <div>
+                            <strong>Garantizar la continuidad educativa:</strong> Asegurar la articulación pedagógica entre los diferentes niveles y modalidades del subsistema de educación básica.
+                        </div>
+                    </li>
+                    <li class="list-group-item border-0 pb-3 d-flex align-items-start">
+                        <i class="bi bi-gear-fill text-secondary me-3 fs-4"></i>
+                        <div>
+                            <strong>Fomentar la investigación y la innovación:</strong> Impulsar la investigación científico-tecnológica con un estilo innovador y transformador en el ámbito educativo.
+                        </div>
+                    </li>
+                    <li class="list-group-item border-0 pb-3 d-flex align-items-start">
+                        <i class="bi bi-gear-fill text-secondary me-3 fs-4"></i>
+                        <div>
+                            <strong>Gestionar recursos y becas:</strong> Otorgar becas y tramitar subsidios para fines educativos, así como promover la obtención de recursos para el sistema educativo.
+                        </div>
+                    </li>
+                    <li class="list-group-item border-0 pb-3 d-flex align-items-start">
+                        <i class="bi bi-gear-fill text-secondary me-3 fs-4"></i>
+                        <div>
+                            <strong>Administrar y fomentar instituciones educativas y culturales:</strong> Establecer y apoyar instituciones de carácter artístico, cultural y educativo, promoviendo la cultura étnica y los valores nacionales.
+                        </div>
+                    </li>
+                    <li class="list-group-item border-0 pb-3 d-flex align-items-start">
+                        <i class="bi bi-gear-fill text-secondary me-3 fs-4"></i>
+                        <div>
+                            <strong>Mantener la infraestructura escolar:</strong> Crear y gestionar un sistema para el mantenimiento preventivo, correctivo, dotación y construcción de edificaciones escolares.
+                        </div>
+                    </li>
+                    <li class="list-group-item border-0 pb-1 d-flex align-items-start">
+                        <i class="bi bi-gear-fill text-secondary me-3 fs-4"></i>
+                        <div>
+                            <strong>Articular con la comunidad:</strong> Establecer acuerdos y colaboraciones con los sectores social y privado para la ejecución de programas educativos y de bienestar social.
+                        </div>
+                    </li>
+                    <li class="list-group-item border-0 pb-1 d-flex align-items-start">
+                        <i class="bi bi-gear-fill text-secondary me-3 fs-4"></i>
+                        <div>
+                            <strong>Formar al personal docente y administrativo:</strong> Desarrollar programas de capacitación y actualización profesional para los responsables del proceso educativo.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<hr>
+
+{% endblock %}

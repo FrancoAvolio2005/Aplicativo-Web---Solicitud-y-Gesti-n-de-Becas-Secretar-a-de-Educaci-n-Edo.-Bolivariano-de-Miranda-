@@ -1,0 +1,56 @@
+<!-- Página para ver las solicitudes que han sido aprobadas previamente por un analista en la aplicación, la función o el objetivo, es cambiar el estado de "aprobada" a "asignada",
+mostrando un listado con las solicitudes y un botón que permita llevar a la asignación de la misma -->
+
+{% extends 'admin_dashboard.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container py-4">
+    <h2 class="display-6 text-center mb-4">Asignar Becas</h2>
+
+    {% if solic_aprobadas %}
+    <div class="list-group">
+        {% for solicitud in solic_aprobadas %}
+        <div class="list-group-item list-group-item-action mb-3 shadow-sm rounded-3">
+            <p class="mb-1">
+                <strong>Nombre del Solicitante:</strong> {{ solicitud.user.username }}
+            </p>
+            <p class="mb-1">
+                <strong>Correo del Solicitante:</strong> {{ solicitud.user.email }}
+            </p>
+            <p class="mb-2">
+                <strong>Tipo de Beca:</strong> {{ solicitud.beca.nombre|default:"Beca Desconocida" }}
+            </p>
+            <p class="mb-3">
+                <strong>Estado de la Beca:</strong> <span class="badge bg-primary text-white fs-6"> {{ solicitud.estatus_beca.nombre|default:"Estado Desconocido" }}</span>
+            </p>
+            <p class="mb-4">
+                <strong>Fecha de Creación:</strong> {{ solicitud.fecha_creacion }}
+            </p>
+            <div class="d-flex justify-content-end gap-2">
+                <a href="{% url 'asig_beca_estado' solicitud.id_solicitud %}" class="btn btn-sm btn-warning">Asignar Beca</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center" role="alert">
+        No se han asignado becas en este momento.
+    </div>
+    {% endif %}
+
+</div>
+
+<!-- Botón que le permite al usuario regresar al panel de inicio principal del administrador. -->
+
+<div class="mt-4 mb-5 d-flex justify-content-between align-items-center">
+    <a href="{% url 'admin_home' %}" class="btn btn-danger">
+        <ion-icon name="arrow-back-outline"></ion-icon> Volver atrás
+    </a>
+    
+    <a href="{% url 'ver_asig_beca' %}" class="btn btn-warning">
+        Ver Becas Asignadas
+    </a>
+</div>
+
+{% endblock %}
